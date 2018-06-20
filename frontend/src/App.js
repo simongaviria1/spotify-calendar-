@@ -9,10 +9,10 @@ class App extends Component {
       <div className="App">
         <header>
           <div id="logo">
-            <span className="icon">date_range</span>
+            {/* <span className="icon">date_range</span>
             <span>
-              react<b>calendar</b>
-            </span>
+              Spotify baloney 
+            </span> */}
           </div>
         </header>
         <main>
