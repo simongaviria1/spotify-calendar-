@@ -158,7 +158,7 @@ class Calendar extends Component {
 
     render() {
         const {showForm, selectedDate, date} = this.state
-        console.log('state', this.state.date)
+        console.log('state', this.state.selectedDate)
         return (
             <div>
                 <div className="calendar">
