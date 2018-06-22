@@ -1,8 +1,6 @@
 const db = require("./index");
-const authHelpers = require("../auth/helpers");
-const passport = require("../auth/local");
-
-//Creates new user
+// const authHelpers = require("../auth/helpers"); const passport =
+// require("../auth/local"); Creates new user
 const createUser = (req, res, next) => {
     const hash = authHelpers.createHash(req.body.password);
     console.log("create user hash:", hash);
@@ -48,7 +46,7 @@ const getUser = (req, res, next) => {
 //Grabs all of the notes in the database
 const getEvents = (req, res, next) => {
     db
-        .any("SELECT description, start_time, end_time FROM events WHERE user_id = ${id}", req.user)
+        .any("SELECT description, start_time, end_time FROM events WHERE user_id = ${id}", {id: req.user.id})
         .then(data => {
             res
                 .status(200)
@@ -62,15 +60,15 @@ const getEvents = (req, res, next) => {
 //Adds another note to the backend
 const postEvents = (req, res, next) => {
     db
-        .none("INSERT INTO events (description, start_time, end_time) VALUES (${description}, $" +
-            "{start_time}, ${end_time})", {
-        title: req.body.title,
-        note: req.body.note,
+        .none("INSERT INTO events (description, start_time, end_time, user_id) VALUES (${description}, $" +
+            "{start_time}, ${end_time}, ${user_id})", {
+        description: req.body.description,
+        start_time: req.body.start_time,
+        end_time: req.body.end_time,
         user_id: req.user.id
     })
         .then((data) => {
             res.status(200)
-            // .json({data: data[0]})
         })
         .catch(err => {
             return next(err)
@@ -78,7 +76,6 @@ const postEvents = (req, res, next) => {
 }
 
 const deleteEvent = (req, res, next) => {
-    console.log('REQQQ: ', req.body.title)
     db
         .none("DELETE FROM events WHERE description = ${description}", {description: req.body.description})
         .then((data) => {
@@ -91,6 +88,7 @@ const deleteEvent = (req, res, next) => {
 
 module.exports = {
     createUser,
+    getUser,
     logoutUser,
     getEvents,
     postEvents,
