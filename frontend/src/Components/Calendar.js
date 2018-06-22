@@ -1,13 +1,63 @@
 import React, {Component} from 'react'
 import dateFns from "date-fns";
 
+// import Modal from './Modal'
+import Form from './Form'
+
 class Calendar extends Component {
     constructor() {
         super();
         this.state = {
             currentMonth: new Date(),
-            selectedDate: new Date()
+            selectedDate: new Date(),
+            events: []
         }
+    }
+
+    hideForm = () => {
+        this.setState({showForm: false})
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault()
+        const {events, start, end, description} = this.state
+        this.setState({
+            events: [
+                ...events, {
+                    start: start,
+                    end: end,
+                    description: description
+                }
+            ],
+            showForm: false
+        })
+    }
+
+    formatDate = () => {
+        const {selectedDate} = this.state
+        var month = selectedDate.getMonth() + 1
+        var day = selectedDate.getDate()
+        var year = selectedDate.getFullYear()
+
+        if (month < 10) {
+            month = '0' + month
+        }
+        this.setState({
+            date: year + '-' + month + '-' + day
+        })
+
+    }
+
+    handleDescriptionChange = e => {
+        this.setState({description: e.target.value})
+    }
+
+    handleStartTimeChange = e => {
+        this.setState({start: e.target.value})
+    }
+
+    handleEndTimeChange = e => {
+        this.setState({end: e.target.value})
     }
 
     renderHeader = () => {
@@ -15,6 +65,7 @@ class Calendar extends Component {
         return (
             <div className="header row flex-middle">
                 <div className="col col-start">
+                    {this.renderModal}
                     <div className="icon" onClick={this.prevMonth}>
                         chevron_left
                     </div>
@@ -31,6 +82,7 @@ class Calendar extends Component {
         );
     }
 
+    //Renders date on calendar
     renderDays = () => {
         const dateFormat = "dddd";
         const days = [];
@@ -71,7 +123,6 @@ class Calendar extends Component {
                         key={day}
                         onClick={() => this.onDateClick(dateFns.parse(cloneDay))}>
                         <span className="number">{formattedDate}</span>
-                        <span className="bg">{formattedDate}</span>
                     </div>
                 );
                 day = dateFns.addDays(day, 1);
@@ -87,13 +138,18 @@ class Calendar extends Component {
         return <div className="body">{rows}</div>;
     }
 
-    onClickDay = () => {}
+    onDateClick = day => {
+        const {currentMonth} = this.state;
+        this.formatDate()
+        this.setState({selectedDate: day, showForm: true});
+    };
 
     nextMonth = () => {
         this.setState({
             currentMonth: dateFns.addMonths(this.state.currentMonth, 1)
         });
     }
+
     prevMonth = () => {
         this.setState({
             currentMonth: dateFns.subMonths(this.state.currentMonth, 1)
@@ -101,11 +157,25 @@ class Calendar extends Component {
     }
 
     render() {
+        const {showForm, selectedDate, date} = this.state
+        console.log('state', this.state.date)
         return (
-            <div className="calendar">
-                {this.renderHeader()}
-                {this.renderDays()}
-                {this.renderCells()}
+            <div>
+                <div className="calendar">
+                    {this.renderHeader()}
+                    {this.renderDays()}
+                    {this.renderCells()}
+                </div>
+
+                {showForm
+                    ? <Form
+                            date={date}
+                            hideForm={this.hideForm}
+                            onSubmit={this.onSubmit}
+                            handleDescriptionChange={this.handleDescriptionChange}
+                            handleStartTimeChange={this.handleStartTimeChange}
+                            handleEndTimeChange={this.handleEndTimeChange}/>
+                    : ''}
             </div>
         )
     }
