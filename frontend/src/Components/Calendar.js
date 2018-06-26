@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
+
 import dateFns from "date-fns";
+import axios from 'axios'
 
 // import Modal from './Modal'
 import Form from './Form'
+import Event from './Event'
 
 class Calendar extends Component {
     constructor() {
@@ -14,19 +17,80 @@ class Calendar extends Component {
         }
     }
 
+    // Gets all of the events before the component mounts -> it will render events
+    // as well as the date as soon as the page rerenders
+    componentWillMount = () => {
+        const {selectedDate} = this.state
+        var month = selectedDate.getMonth() + 1
+        var day = selectedDate.getDate()
+        var year = selectedDate.getFullYear()
+
+        //Formats month from '6' => '06'
+        if (month < 10) {
+            month = '0' + month
+        }
+        //Formats day from '6' => '06'
+        if (day < 10) {
+            day = '0' + day
+        }
+        axios   //Axios request to get all of the events when the page renders 
+            .get('/users/events', {
+            params: {
+                event_month: month,
+                user_id: 1
+            }
+        })
+            .then(res => {
+                console.log('res', res.data.user)
+                this.setState({
+                    events: res
+                        .data
+                        .user
+                        .reduce((acc, item) => ({
+                            ...acc,
+                            [item.event_day]: res
+                                .data
+                                .user
+                                .filter((i) => i.event_day === item.event_day)
+                                // Takes incoming data [Object, Object] turns it into -> event_day:
+                                // [{event_details_object}] and passes this as props to Event component
+                        }), {})
+                })
+            })
+    }
+
     hideForm = () => {
         this.setState({showForm: false})
     }
 
     onSubmit = (e) => {
         e.preventDefault()
-        const {events, start, end, description} = this.state
+        const {events, start, end, description, date} = this.state
+
+        //Splits the date into month, day and year
+        var dateArray = date.split('-')
+        var day = dateArray[dateArray.length - 1]
+        var month = dateArray[1]
+        var year = dateArray[0]
+
+        axios.post('/users/events', {
+            description: description,
+            start_time: start,
+            end_time: end,
+            event_month: month,
+            event_day: day,
+            event_year: year,
+            user_id: 1 //Hardcoded the user's id number
+        })
+        console.log('event added')
         this.setState({
+            //Need to fix this 
             events: [
                 ...events, {
                     start: start,
                     end: end,
-                    description: description
+                    description: description,
+                    date: date
                 }
             ],
             showForm: false
@@ -41,6 +105,9 @@ class Calendar extends Component {
 
         if (month < 10) {
             month = '0' + month
+        }
+        if (day < 10) {
+            day = '0' + day
         }
         this.setState({
             date: year + '-' + month + '-' + day
@@ -77,6 +144,7 @@ class Calendar extends Component {
                 </div>
                 <div className="col col-end" onClick={this.nextMonth}>
                     <div className="icon">chevron_right</div>
+
                 </div>
             </div>
         );
@@ -98,7 +166,7 @@ class Calendar extends Component {
     }
 
     renderCells = () => {
-        const {currentMonth, selectedDate} = this.state;
+        const {currentMonth, selectedDate, events} = this.state;
         const monthStart = dateFns.startOfMonth(currentMonth);
         const monthEnd = dateFns.endOfMonth(monthStart);
         const startDate = dateFns.startOfWeek(monthStart);
@@ -123,6 +191,7 @@ class Calendar extends Component {
                         key={day}
                         onClick={() => this.onDateClick(dateFns.parse(cloneDay))}>
                         <span className="number">{formattedDate}</span>
+                        <Event events={events[formattedDate]} day={formattedDate}/>
                     </div>
                 );
                 day = dateFns.addDays(day, 1);
@@ -134,7 +203,6 @@ class Calendar extends Component {
             );
             days = [];
         }
-
         return <div className="body">{rows}</div>;
     }
 
@@ -145,20 +213,32 @@ class Calendar extends Component {
     };
 
     nextMonth = () => {
+        const {selectedDate} = this.state
+        var month = selectedDate.getMonth() + 1
+        if (month < 10) {
+            month = '0' + month
+        }
+        console.log('month', month)
         this.setState({
             currentMonth: dateFns.addMonths(this.state.currentMonth, 1)
         });
     }
 
     prevMonth = () => {
+        const {selectedDate} = this.state
+        var month = selectedDate.getMonth() + 1
+        if (month < 10) {
+            month = '0' + month
+        }
+        console.log('month', month)
         this.setState({
             currentMonth: dateFns.subMonths(this.state.currentMonth, 1)
         });
-    }
+    };
 
     render() {
-        const {showForm, selectedDate, date} = this.state
-        console.log('state', this.state.selectedDate)
+        const {showForm, selectedDate, date, events} = this.state
+        console.log('events', events)
         return (
             <div>
                 <div className="calendar">
