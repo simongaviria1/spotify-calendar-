@@ -13,7 +13,8 @@ class Calendar extends Component {
         this.state = {
             currentMonth: new Date(),
             selectedDate: new Date(),
-            events: []
+            events: [],
+            message: ''
         }
     }
 
@@ -33,7 +34,7 @@ class Calendar extends Component {
         if (day < 10) {
             day = '0' + day
         }
-        axios   //Axios request to get all of the events when the page renders 
+        axios //Axios request to get all of the events when the page renders
             .get('/users/events', {
             params: {
                 event_month: month,
@@ -73,6 +74,7 @@ class Calendar extends Component {
         var month = dateArray[1]
         var year = dateArray[0]
 
+        console.log('onSubmit day', day)
         axios.post('/users/events', {
             description: description,
             start_time: start,
@@ -82,18 +84,32 @@ class Calendar extends Component {
             event_year: year,
             user_id: 1 //Hardcoded the user's id number
         })
-        console.log('event added')
+        console.log('events on submit', events[day])
         this.setState({
-            //Need to fix this 
-            events: [
-                ...events, {
-                    start: start,
-                    end: end,
-                    description: description,
-                    date: date
-                }
-            ],
-            showForm: false
+            // Need to fix this
+            events: events[day]
+                ? events[day] = [
+                    ...events[day], {
+                        description: description,
+                        start_time: start,
+                        end_time: end,
+                        event_month: month,
+                        event_day: day,
+                        event_year: year
+                    }
+                ]
+                : events[day] = [
+                    {
+                        description: description,
+                        start_time: start,
+                        end_time: end,
+                        event_month: month,
+                        event_day: day,
+                        event_year: year
+                    }
+                ],
+            showForm: false,
+            message: 'Event added'
         })
     }
 
@@ -214,11 +230,40 @@ class Calendar extends Component {
 
     nextMonth = () => {
         const {selectedDate} = this.state
-        var month = selectedDate.getMonth() + 1
+        var month = dateFns
+            .addMonths(this.state.currentMonth, 1)
+            .getMonth() + 1
+
         if (month < 10) {
             month = '0' + month
         }
+
         console.log('month', month)
+        axios //Axios request to get all of the events when the page renders
+            .get('/users/events', {
+            params: {
+                event_month: month,
+                user_id: 1
+            }
+        })
+            .then(res => {
+                console.log('res', res.data.user)
+                this.setState({
+                    events: res
+                        .data
+                        .user
+                        .reduce((acc, item) => ({
+                            ...acc,
+                            [item.event_day]: res
+                                .data
+                                .user
+                                .filter((i) => i.event_day === item.event_day)
+                                // Takes incoming data [Object, Object] turns it into -> event_day:
+                                // [{event_details_object}] and passes this as props to Event component
+                        }), {})
+                })
+            })
+
         this.setState({
             currentMonth: dateFns.addMonths(this.state.currentMonth, 1)
         });
@@ -226,19 +271,50 @@ class Calendar extends Component {
 
     prevMonth = () => {
         const {selectedDate} = this.state
-        var month = selectedDate.getMonth() + 1
+        var month = dateFns
+            .subMonths(this.state.currentMonth, 1)
+            .getMonth() + 1
+
         if (month < 10) {
             month = '0' + month
         }
+
+        axios //Axios request to get all of the events when the page renders
+            .get('/users/events', {
+            params: {
+                event_month: month,
+                user_id: 1
+            }
+        })
+            .then(res => {
+                console.log('res', res.data.user)
+                this.setState({
+                    events: res
+                        .data
+                        .user
+                        .reduce((acc, item) => ({
+                            ...acc,
+                            [item.event_day]: res
+                                .data
+                                .user
+                                .filter((i) => i.event_day === item.event_day)
+                                // Takes incoming data [Object, Object] turns it into -> event_day:
+                                // [{event_details_object}] and passes this as props to Event component
+                        }), {})
+                })
+            })
+
         console.log('month', month)
+
+        // console.log('month', month)
         this.setState({
             currentMonth: dateFns.subMonths(this.state.currentMonth, 1)
         });
     };
 
     render() {
-        const {showForm, selectedDate, date, events} = this.state
-        console.log('events', events)
+        const {showForm, selectedDate, date, events, message} = this.state
+        console.log('events from states', events)
         return (
             <div>
                 <div className="calendar">
@@ -256,6 +332,7 @@ class Calendar extends Component {
                             handleStartTimeChange={this.handleStartTimeChange}
                             handleEndTimeChange={this.handleEndTimeChange}/>
                     : ''}
+                {message}
             </div>
         )
     }
