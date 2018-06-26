@@ -201,6 +201,10 @@ main {
     pointer-events: none;
 }
 
+.disabled {
+    visibility: hidden;
+}
+
 .calendar .body .cell .bg {
     font-weight: 700;
     line-height: 1;
