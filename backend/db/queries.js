@@ -30,7 +30,6 @@ const logoutUser = (req, res, next) => {
 
 //Grabs user information
 const getUser = (req, res, next) => {
-    console.log("REQQQ:", req)
     db
         .one("SELECT * FROM users WHERE username=${username}", req.user)
         .then(data => {
@@ -43,10 +42,14 @@ const getUser = (req, res, next) => {
         })
 };
 
-//Grabs all of the notes in the database
+//Grabs all of the notes in the database by month 
 const getEvents = (req, res, next) => {
     db
-        .any("SELECT description, start_time, end_time FROM events WHERE user_id = ${id}", {id: req.user.id})
+        .any("SELECT description, start_time, end_time, event_day FROM events WHERE user_id = " +
+            "${user_id} AND event_month = ${event_month}", {
+        user_id: req.query.user_id,
+        event_month: req.query.event_month
+    })
         .then(data => {
             res
                 .status(200)
@@ -55,17 +58,21 @@ const getEvents = (req, res, next) => {
         .catch(err => {
             return next(err);
         })
-}
+};
 
 //Adds another note to the backend
 const postEvents = (req, res, next) => {
     db
-        .none("INSERT INTO events (description, start_time, end_time, user_id) VALUES (${description}, $" +
-            "{start_time}, ${end_time}, ${user_id})", {
+        .none("INSERT INTO events (description, start_time, end_time, event_month, event_day, e" +
+            "vent_year, user_id) VALUES (${description}, ${start_time}, ${end_time}, ${event_" +
+            "month},${event_day},${event_year}, ${user_id})", {
         description: req.body.description,
         start_time: req.body.start_time,
         end_time: req.body.end_time,
-        user_id: req.user.id
+        event_month: req.body.event_month,
+        event_day: req.body.event_day,
+        event_year: req.body.event_year,
+        user_id: req.body.user_id
     })
         .then((data) => {
             res.status(200)
@@ -73,7 +80,7 @@ const postEvents = (req, res, next) => {
         .catch(err => {
             return next(err)
         })
-}
+};
 
 const deleteEvent = (req, res, next) => {
     db
@@ -84,7 +91,7 @@ const deleteEvent = (req, res, next) => {
         .catch(err => {
             return next(err)
         })
-}
+};
 
 module.exports = {
     createUser,
