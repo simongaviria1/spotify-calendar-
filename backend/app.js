@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.get('*', (req, res) => {
+app.get('*', (req, res) => { 
   res.sendFile(path.join(_dirname + '/client/build/index.html'))
 })
 
