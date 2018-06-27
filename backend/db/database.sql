@@ -1,11 +1,4 @@
 DROP DATABASE IF EXISTS calendar_events;
-CREATE DATABASE calendar_events;
-
-\c calendar_events;
-
-
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS notes;
 
 CREATE TABLE users (
     ID SERIAL PRIMARY KEY,
@@ -32,4 +25,4 @@ INSERT INTO users (fullName,username, password_digest, email)
 
 
 INSERT INTO events (description, start_time, end_time, event_month, event_day, event_year, user_id)
-  VALUES('my first event', '11:00', '12:00', '06', '22', '2018', 1);
+  VALUES('my first event', '11:00', '12:00', '06', '22', '2018', 1);Ï
