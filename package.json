@@ -1,0 +1,9 @@
+{
+  "name": "spotifychallenge",
+  "version": "1.0.0",
+  "description": "calendar",
+  "scripts": {
+    "start": "cd calendar-backend && npm install && node ./bin/www",
+    "heroku-postbuild": "cd calendar-frontend && npm install --only=dev && npm install && npm run build"
+  }
+}
