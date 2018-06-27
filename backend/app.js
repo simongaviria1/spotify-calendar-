@@ -33,12 +33,16 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // view engine setup
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(_dirname + '/client/build/index.html'))
+})
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
