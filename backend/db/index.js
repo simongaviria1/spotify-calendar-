@@ -1,5 +1,5 @@
 var pgp = require('pg-promise')({});
-var connectionString = process.env.DATABASE_URL;
+var connectionString = 'postgress://localhost/calendar_events'
 var db = pgp(connectionString)
 
 module.exports = db;
