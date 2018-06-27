@@ -1,11 +1,4 @@
 DROP DATABASE IF EXISTS calendar_events;
-CREATE DATABASE calendar_events;
-
-\c calendar_events;
-
-
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS notes;
 
 CREATE TABLE users (
     ID SERIAL PRIMARY KEY,

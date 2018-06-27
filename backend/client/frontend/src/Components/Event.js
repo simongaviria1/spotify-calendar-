@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
-import Style from '.././CSS/style.css'
+import Style from '../CSS/style.css'
 
 // Component takes in events object and iterates through array of objects to
 // display event details
 
 class Event extends Component {
 
-    handleClick = () => {
-        console.log('clicked')
+    handleClick = id => {
+        console.log('clicked', id)
     }
 
     render() {
@@ -17,8 +17,8 @@ class Event extends Component {
             <div>{events
                     ? <div>{events.map(ele => {
                                 return (
-                                    <div className='event-details' onClick={this.handleClick}>
-                                        <p>{ele.description}</p>
+                                    <div className='event' onClick={this.handleClick.bind(ele.id)} key={ele.id}>
+                                        <p className='event-details'>{ele.description}</p>
                                     </div>
                                 )
                             })}</div>
