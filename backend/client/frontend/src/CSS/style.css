@@ -258,3 +258,11 @@ main {
 .display-none {
     display: none;
 }
+
+/* Events */
+
+.event-details {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

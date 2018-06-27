@@ -84,30 +84,33 @@ class Calendar extends Component {
             event_year: year,
             user_id: 1 //Hardcoded the user's id number
         })
-        console.log('events on submit', events[day])
+
+        let eventCopy = this.state.events
+        events[day]
+            ? events[day].push({
+                description: description,
+                start_time: start,
+                end_time: end,
+                event_month: month,
+                event_day: day,
+                event_year: year
+            })
+            : events[day] = [
+                {
+                    description: description,
+                    start_time: start,
+                    end_time: end,
+                    event_month: month,
+                    event_day: day,
+                    event_year: year
+                }
+            ]
+
+        console.log('eventCopy', eventCopy)
+
         this.setState({
             // Need to fix this
-            events: events[day]
-                ? events[day] = [
-                    ...events[day], {
-                        description: description,
-                        start_time: start,
-                        end_time: end,
-                        event_month: month,
-                        event_day: day,
-                        event_year: year
-                    }
-                ]
-                : events[day] = [
-                    {
-                        description: description,
-                        start_time: start,
-                        end_time: end,
-                        event_month: month,
-                        event_day: day,
-                        event_year: year
-                    }
-                ],
+            events: eventCopy,
             showForm: false,
             message: 'Event added'
         })
@@ -314,7 +317,7 @@ class Calendar extends Component {
 
     render() {
         const {showForm, selectedDate, date, events, message} = this.state
-        console.log('events from states', events)
+        // console.log('events from states', events)
         return (
             <div>
                 <div className="calendar">
