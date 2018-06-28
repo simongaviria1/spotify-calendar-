@@ -1,6 +1,8 @@
 const db = require("./index");
-// const authHelpers = require("../auth/helpers"); const passport =
-// require("../auth/local"); Creates new user
+const authHelpers = require("../auth/helpers");
+const passport = require("../auth/local");
+
+// Creates new user
 const createUser = (req, res, next) => {
     const hash = authHelpers.createHash(req.body.password);
     console.log("create user hash:", hash);
@@ -42,11 +44,11 @@ const getUser = (req, res, next) => {
         })
 };
 
-//Grabs all of the notes in the database by month 
+//Grabs all of the notes in the database by month
 const getEvents = (req, res, next) => {
     db
-        .any("SELECT id, description, start_time, end_time, event_day FROM events WHERE user_id = " +
-            "${user_id} AND event_month = ${event_month}", {
+        .any("SELECT id, description, start_time, end_time, event_day FROM events WHERE user_i" +
+            "d = ${user_id} AND event_month = ${event_month}", {
         user_id: req.query.user_id,
         event_month: req.query.event_month
     })
