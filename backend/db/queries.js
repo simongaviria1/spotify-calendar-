@@ -85,8 +85,9 @@ const postEvents = (req, res, next) => {
 };
 
 const deleteEvent = (req, res, next) => {
+    console.log('event ID', req.body.id)
     db
-        .none("DELETE FROM events WHERE description = ${description}", {description: req.body.description})
+        .none("DELETE FROM events WHERE id = ${id}", {id: req.body.id})
         .then((data) => {
             res.status(200)
         })
