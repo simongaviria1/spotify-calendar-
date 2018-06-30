@@ -42,7 +42,7 @@ class Calendar extends Component {
             }
         })
             .then(res => {
-                console.log('res', res.data.user)
+                // console.log('res', res.data.user)
                 this.setState({
                     events: res
                         .data
@@ -74,7 +74,7 @@ class Calendar extends Component {
         var month = dateArray[1]
         var year = dateArray[0]
 
-        console.log('onSubmit day', day)
+        // console.log('onSubmit day', day)
         axios.post('/users/events', {
             description: description,
             start_time: start,
@@ -106,7 +106,7 @@ class Calendar extends Component {
                 }
             ]
 
-        console.log('eventCopy', eventCopy)
+        // console.log('eventCopy', eventCopy)
 
         this.setState({
             // Need to fix this
@@ -241,7 +241,7 @@ class Calendar extends Component {
             month = '0' + month
         }
 
-        console.log('month', month)
+        // console.log('month', month)
         axios //Axios request to get all of the events when the page renders
             .get('/users/events', {
             params: {
@@ -250,7 +250,7 @@ class Calendar extends Component {
             }
         })
             .then(res => {
-                console.log('res', res.data.user)
+                // console.log('res', res.data.user)
                 this.setState({
                     events: res
                         .data
@@ -290,7 +290,7 @@ class Calendar extends Component {
             }
         })
             .then(res => {
-                console.log('res', res.data.user)
+                // console.log('res', res.data.user)
                 this.setState({
                     events: res
                         .data
@@ -307,7 +307,7 @@ class Calendar extends Component {
                 })
             })
 
-        console.log('month', month)
+        // console.log('month', month)
 
         // console.log('month', month)
         this.setState({
