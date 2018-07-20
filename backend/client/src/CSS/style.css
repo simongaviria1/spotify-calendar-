@@ -1,6 +1,5 @@
 /* FONT IMPORTS */
 
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 .icon {
     font-family: 'Material Icons', serif;
@@ -13,20 +12,15 @@
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'liga';
 }
 
 /* VARIABLES */
 
 :root {
-    --main-color: #1a8fff;
     --text-color: #777;
-    --text-color-light: #ccc;
     --border-color: #eee;
-    --bg-color: #f9f9f9;
     --neutral-color: #fff;
 }
 
@@ -41,8 +35,6 @@ body {
     font-size: 1em;
     font-weight: 300;
     line-height: 1.5;
-    color: var(--text-color);
-    background: var(--bg-color);
     position: relative;
 }
 
@@ -50,14 +42,11 @@ header {
     display: block;
     width: 100%;
     padding: 1.75em 0;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--neutral-color);
 }
 
 header #logo {
     font-size: 175%;
     text-align: center;
-    color: var(--main-color);
     line-height: 1;
 }
 
@@ -148,7 +137,6 @@ main {
 .calendar .days {
     text-transform: uppercase;
     font-weight: 400;
-    color: var(--text-color-light);
     font-size: 70%;
     padding: .75em 0;
     border-bottom: 1px solid var(--border-color);
@@ -161,17 +149,12 @@ main {
     overflow: hidden;
     cursor: pointer;
     background: var(--neutral-color);
-    transition: 0.25s ease-out;
-}
-
-.calendar .body .cell:hover {
-    background: var(--bg-color);
-    transition: 0.5s ease-out;
+    transition: 0.50s ease-out;
 }
 
 .calendar .body .selected {
-    border-left: 10px solid transparent;
-    border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
+    border-left: 10px solid;
+    border-color: grey border-style color;
     border-image-slice: 1;
 }
 
@@ -193,11 +176,10 @@ main {
     line-height: 1;
     top: .75em;
     right: .75em;
-    font-weight: 700;
+    font-weight: 1000;
 }
 
 .calendar .body .disabled {
-    color: var(--text-color-light);
     pointer-events: none;
 }
 
@@ -208,20 +190,17 @@ main {
 .calendar .body .cell .bg {
     font-weight: 700;
     line-height: 1;
-    /* color: var(--main-color); */
     opacity: 0;
     font-size: 8em;
     position: absolute;
     top: -.2em;
     right: -.05em;
-    transition: .25s ease-out;
     letter-spacing: -.07em;
 }
 
 .calendar .body .cell:hover .bg,
 .calendar .body .selected .bg {
-    opacity: 0.05;
-    transition: .5s ease-in;
+    background-color: rgba(211, 211, 211, 0.29);
 }
 
 .calendar .body .col {
@@ -237,18 +216,23 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 400px;
     background: rgba(0, 0, 0, 0.6);
 }
 
 .modal-main {
     position: fixed;
-    background: white;
-    width: 80%;
+    background: lightgrey;
+    width: 50%;
     height: auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 10px;
+}
+
+.modal-main>p {
+    color: black;
 }
 
 .display-block {
@@ -261,8 +245,21 @@ main {
 
 /* Events */
 
+.event:hover{ 
+    background-color: rgba(211, 211, 211, 0.57)
+}
+
 .event-details {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Form  */
+
+#event-form {
+    border: 1px solid var(--border-color);
+    width: 32%;
+    margin-top: 10px;
+    padding: 10px;
 }

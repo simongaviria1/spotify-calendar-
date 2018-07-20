@@ -14,7 +14,9 @@ class Calendar extends Component {
             currentMonth: new Date(),
             selectedDate: new Date(),
             events: [],
-            message: ''
+            eventId: null,
+            message: '',
+            displayModal: false
         }
     }
 
@@ -60,8 +62,28 @@ class Calendar extends Component {
             })
     }
 
+    deleteEvent = eventId => {
+        axios
+            .delete('/users/events', {id: eventId})
+            .then(res => {
+                console.log('event deleted')
+            })
+    }
+
+    toggleClass = e => {
+        this.setState({displayModal: true})
+    }
+
+    hideModal = () => {
+        this.setState({displayModal: false})
+    }
+
     hideForm = () => {
         this.setState({showForm: false})
+    }
+
+    setId = (id) => {
+        this.setState({id: id})
     }
 
     onSubmit = (e) => {
@@ -185,8 +207,9 @@ class Calendar extends Component {
     }
 
     renderCells = () => {
-        const {currentMonth, selectedDate, events} = this.state;
-        const monthStart = dateFns.startOfMonth(currentMonth);  
+
+        const {currentMonth, selectedDate, events, eventId, displayModal} = this.state;
+        const monthStart = dateFns.startOfMonth(currentMonth);
         const monthEnd = dateFns.endOfMonth(monthStart);
         const startDate = dateFns.startOfWeek(monthStart);
         const endDate = dateFns.endOfWeek(monthEnd);
@@ -215,7 +238,13 @@ class Calendar extends Component {
                         key={day}
                         onClick={() => this.onDateClick(dateFns.parse(cloneDay))}> {/*Convert the given argument to an instance of Date*/}
                         <span className="number">{formattedDate}</span>
-                        <Event events={events[formattedDate]} day={formattedDate}/>
+                        <Event
+                            events={events[formattedDate]}
+                            day={formattedDate}
+                            deleteEvent={this.deleteEvent}
+                            eventId={eventId}
+                            displayModal={displayModal}
+                            toggleClass={this.toggleClass}/>
                     </div>
                 );
                 day = dateFns.addDays(day, 1);
@@ -345,3 +374,7 @@ class Calendar extends Component {
 }
 
 export default Calendar;
+
+// Complete documentation and in-depth comments can be found here :
+// https://blog.flowandform.agency/create-a-custom-calendar-in-react-3df1bfd0b72
+// 8 by Matej Kovač
