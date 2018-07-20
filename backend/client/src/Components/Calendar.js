@@ -199,7 +199,7 @@ class Calendar extends Component {
         for (let i = 0; i < 7; i++) {
             days.push(
                 <div className="col col-center" key={i}>
-                    {dateFns.format(dateFns.addDays(startDate, i), dateFormat)}
+                    {dateFns.format(dateFns.addDays(startDate, i), dateFormat)} {/*Add the specified number of days to the given date.*/}
                 </div>
             );
         }
@@ -207,12 +207,18 @@ class Calendar extends Component {
     }
 
     renderCells = () => {
+
         const {currentMonth, selectedDate, events, eventId, displayModal} = this.state;
         const monthStart = dateFns.startOfMonth(currentMonth);
         const monthEnd = dateFns.endOfMonth(monthStart);
         const startDate = dateFns.startOfWeek(monthStart);
         const endDate = dateFns.endOfWeek(monthEnd);
 
+        console.log('monthEnd', monthEnd)
+        console.log('monthStart', monthStart)
+        console.log('endDate', endDate)
+        console.log('currentMonth', currentMonth)
+        
         const dateFormat = "D";
         const rows = [];
         let days = [];
@@ -230,7 +236,7 @@ class Calendar extends Component {
                             ? "selected"
                             : ""}`}
                         key={day}
-                        onClick={() => this.onDateClick(dateFns.parse(cloneDay))}>
+                        onClick={() => this.onDateClick(dateFns.parse(cloneDay))}> {/*Convert the given argument to an instance of Date*/}
                         <span className="number">{formattedDate}</span>
                         <Event
                             events={events[formattedDate]}
@@ -334,8 +340,6 @@ class Calendar extends Component {
                         }), {})
                 })
             })
-
-        // console.log('month', month)
 
         // console.log('month', month)
         this.setState({
